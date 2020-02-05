@@ -73,49 +73,49 @@
         }
     ])
     ```
-        - aggregation return from MongoDB CLI ("tests" key added)
-        ```
-        { 
-            "_id" : ObjectId("5e1cfb615116692463598ae5"), 
-            "project" : "proj_name", 
-            "fw" : "fw_name", 
-            "tests_id" : ObjectId("5e17af5e6013e8285d176d63"), 
-            ...
-            "start" : "2019-04-23T11:24:14.955Z",
-            "end" : "2019-04-24T14:23:12.012Z", 
-            "result" : "Pass", 
-            "tests" : [ 
-                { 
-                    "_id" : ObjectId("5e17af5e6013e8285d176d63"), 
-                    "group" : "group_name", 
-                    "name" : "test_name", 
-                    "code" : "" 
-                } 
-            ] 
-        }
-        ```
-        - aggregation return from Laravel-Mongodb
-        ```
-        Array ( 
-            [_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e1cfb615116692463598ae5 ) 
-            [project] => proj_name
-            [fw] => fw_name 
-            [tests_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e17af5e6013e8285d176d63 ) 
-            ...
-            [start] => 2019-04-23T11:24:14.955Z 
-            [end] => 2019-04-24T14:23:12.012Z 
-            [result] => Pass 
-            [tests] => MongoDB\Model\BSONArray Object ( 
-                [storage:ArrayObject:private] => Array ( 
-                    [0] => MongoDB\Model\BSONDocument Object ( 
-                        [storage:ArrayObject:private] => Array ( 
-                            [_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e17af5e6013e8285d176d63 ) 
-                            [group] => group_name 
-                            [name] => test_name
-                            [code] =>  
-                        ) 
+    - aggregation return from MongoDB CLI ("tests" key added)
+    ```
+    { 
+        "_id" : ObjectId("5e1cfb615116692463598ae5"), 
+        "project" : "proj_name", 
+        "fw" : "fw_name", 
+        "tests_id" : ObjectId("5e17af5e6013e8285d176d63"), 
+        ...
+        "start" : "2019-04-23T11:24:14.955Z",
+        "end" : "2019-04-24T14:23:12.012Z", 
+        "result" : "Pass", 
+        "tests" : [ 
+            { 
+                "_id" : ObjectId("5e17af5e6013e8285d176d63"), 
+                "group" : "group_name", 
+                "name" : "test_name", 
+                "code" : "" 
+            } 
+        ] 
+    }
+    ```
+    - aggregation return from Laravel-Mongodb
+    ```
+    Array ( 
+        [_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e1cfb615116692463598ae5 ) 
+        [project] => proj_name
+        [fw] => fw_name 
+        [tests_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e17af5e6013e8285d176d63 ) 
+        ...
+        [start] => 2019-04-23T11:24:14.955Z 
+        [end] => 2019-04-24T14:23:12.012Z 
+        [result] => Pass 
+        [tests] => MongoDB\Model\BSONArray Object ( 
+            [storage:ArrayObject:private] => Array ( 
+                [0] => MongoDB\Model\BSONDocument Object ( 
+                    [storage:ArrayObject:private] => Array ( 
+                        [_id] => MongoDB\BSON\ObjectId Object ( [oid] => 5e17af5e6013e8285d176d63 ) 
+                        [group] => group_name 
+                        [name] => test_name
+                        [code] =>  
                     ) 
                 ) 
             ) 
-        )
-        ```
+        ) 
+    )
+    ```
