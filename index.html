@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/handsontable/dist/handsontable.full.min.js"></script>
+    <link href="node_modules/handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+
+</head>
+<body>
+
+    <h2>TEST DB</h2>
+    <pre id="exampleconsole" class="console"></pre>
+    <button name="load" id="load" class="intext-btn">Load</button>
+    <button name="save" id="save" class="intext-btn">Save</button>
+    <div id="example"></div>
+
+</body>
+
+<script>
+    // https://handsontable.com/docs/7.3.0/tutorial-load-and-save.html
+    
+/*     var data = [
+      ['', 'Ford', 'Tesla', 'Toyota', 'Honda'],
+      ['2017', 10, 11, 12, 13],
+      ['2018', 20, 11, 14, 13],
+      ['2019', 30, 15, 12, 13]
+    ]; */
+    
+    // var container = document.getElementById('example');
+    var
+        $$ = function(id) {
+            return document.getElementById(id);
+        },
+        container = $$('example'),
+        exampleConsole = $$('exampleconsole'),
+        //autosave = $$('autosave'),
+        load = $$('load'),
+        save = $$('save'),
+        //autosaveNotification,
+        hot;
+
+    // var users = ['Tony Chu', 'Tony Chu2'];
+
+    var hot = new Handsontable(container, {
+      licenseKey: 'non-commercial-and-evaluation',
+      //data: data,
+      rowHeaders: false,
+      //colHeaders: true,
+      colHeaders: ['', 'Project', 'Version', 'FW', 'Tester'], 
+    //   columns: [
+    //     {}, {}, {}, {}, {type: 'dropdown', source: users}
+    //   ], 
+      filters: true,
+      dropdownMenu: true, 
+      hiddenColumns: {
+          columns: [0]
+      }
+    });
+
+    Handsontable.dom.addEvent(load, 'click', function() {
+        $.ajax({url: 'get_result.php', method: 'GET', success: function(res) {
+            var data = res.response.data;
+            hot.loadData(data);
+            exampleConsole.innerText = 'Data loaded';
+        }});
+    });
+
+    // method: 'GET' also ok
+    Handsontable.dom.addEvent(save, 'click', function() {
+        // save all cell's data
+        $.ajax({url: 'save_result.php', method: 'POST', data: {data: hot.getData()}, success: function (res) {
+            var status = res.status;
+            if (status) {
+                exampleConsole.innerText = 'Data saved';
+            } else {
+                exampleConsole.innerText = 'Save error';
+            }
+        }});
+    });
+    
+</script>
+</html>

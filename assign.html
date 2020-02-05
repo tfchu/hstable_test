@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="node_modules/handsontable/dist/handsontable.full.min.js"></script>
+    <link href="node_modules/jquery-ui-1.12.1/jquery-ui.min.css" rel="stylesheet" >
+    <link href="node_modules/handsontable/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+    <style>
+        label, input { display:block; }
+        input.text { margin-bottom:12px; width:95%; padding: .4em; }
+        fieldset { padding:0; border:0; margin-top:25px; }
+        .ui-dialog .ui-state-error { padding: .3em; }
+        .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    </style>
+</head>
+<body>
+
+    <h2>TEST DB</h2>
+    <pre id="exampleconsole" class="console"></pre>
+    <button name="assign" id="assign" class="intext-btn">Assign</button>
+    <button name="save" id="save" class="intext-btn" hidden="true">Save</button>
+    <button name="cancel" id="cancel" class="intext-btn" hidden="true">Cancel</button>
+    <div id="example"></div>
+
+    <!-- popup with jquery-ui -->
+    <div id="dialog-form" title="Create new project">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset>
+                <label for="project">Project</label>
+                <input type="text" name="project" id="project" value="sample_project" class="text ui-widget-content ui-corner-all">
+                <label for="fw">FW</label>
+                <input type="text" name="fw" id="fw" value="sample_fw" class="text ui-widget-content ui-corner-all">
+
+                <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+            </fieldset>
+        </form>
+    </div>
+
+</body>
+
+<script>
+    // https://jqueryui.com/dialog/#modal-form
+
+    var
+        $$ = function(id) {
+            return document.getElementById(id);
+        },
+        container = $$('example'),
+        exampleConsole = $$('exampleconsole'),
+        //autosave = $$('autosave'),
+        assign = $$('assign'),
+        save = $$('save'),
+        cancel = $$('cancel'), 
+        //autosaveNotification, 
+        project = $$("project"), 
+        fw = $$('fw'), 
+        allFields = $([]).add(project).add(fw), 
+        hot,
+        dialog, 
+        form;
+
+    // create new project
+    // need to change: to ajax call to get all tests, then combine with project/fw, then load to hot
+    // note: 
+    // jQuery: use project.val() if project = $('#project')
+    // DOM object: use project.value if project = $$('project')
+    function addProject() {
+        //allFields.removeClass( "ui-state-error" );
+        // console.log(project.val());
+        // console.log(fw.val());
+        dialog.dialog("close");
+        var data = [['', project.value, 'version', fw.value, 'John']];
+        hot.loadData(data);
+    }
+
+    // load existing project
+    function loadProject() {
+        console.log('load existing project from DB');
+        dialog.dialog("close");
+    }
+
+    dialog = $("#dialog-form").dialog({
+        autoOpen: false, 
+        height: 400, 
+        width: 300, 
+        modal: true, 
+        buttons: {
+            "Create": addProject, 
+            "Load": loadProject, 
+            Cancel: function() {
+                $("#assign").show();
+                $("#save").hide();
+                $("#cancel").hide();
+                dialog.dialog("close");
+            }
+        }, 
+        close: function() {
+            form[0].reset();
+            allFields.removeClass("ui-state-error");
+        }
+    })
+
+    form = dialog.find( "form" ).on( "submit", function(event) {
+      event.preventDefault();
+      addProject();
+    });
+
+    // $("#assign").button().on('click', function() {
+    //     $("#assign").hide();
+    //     $("#save").show();
+    //     dialog.dialog('open');
+    // })
+
+    // var users = ['Tony Chu', 'Tony Chu2'];
+
+    var hot = new Handsontable(container, {
+        licenseKey: 'non-commercial-and-evaluation',
+        //data: data,
+        rowHeaders: false,
+        //colHeaders: true,
+        colHeaders: ['', 'Project', 'Version', 'FW', 'Tester'], 
+        //   columns: [
+        //     {}, {}, {}, {}, {type: 'dropdown', source: users}
+        //   ], 
+        filters: true,
+        dropdownMenu: true, 
+        hiddenColumns: {
+            columns: [0]
+        }
+    });
+
+    Handsontable.dom.addEvent(assign, 'click', function() {
+        $("#assign").hide();
+        $("#save").show();
+        $("#cancel").show();
+        dialog.dialog('open');        
+    })
+
+    // need to change: load the data back after insert, so the table includes id for edit in the future
+    Handsontable.dom.addEvent(save, 'click', function() {
+        // save all cell's data
+        $.ajax({url: 'insert_result.php', method: 'POST', data: {data: hot.getData()}, success: function (res) {
+            //console.log(res);
+            var status = res.status;
+            if (status) {
+                exampleConsole.innerText = 'Data saved';
+            } else {
+                exampleConsole.innerText = 'Save error';
+            }
+        }})
+        .done(function() {
+            $("#assign").show();
+            $("#save").hide();
+            $("#cancel").hide();
+        });
+    });
+
+    Handsontable.dom.addEvent(cancel, 'click', function() {
+        hot.loadData([]);
+        //$(location).attr('href', 'assign.html');
+    })
+    
+</script>
+</html>
