@@ -10,7 +10,16 @@
     - https://docs.mongodb.com/manual/reference/security/#database-administration-roles
     - https://docs.mongodb.com/manual/reference/built-in-roles/#built-in-roles (readWrite cannot drop db)
     - https://docs.mongodb.com/manual/reference/privilege-actions/#dropDatabase
-    - add new user
+    - add admin user (named 'root', pass '123456', auth_db 'admin)
+    ```
+    use admin
+    db.createUser({
+        user: 'root', 
+        pwd: '123456', 
+        roles: ['root']
+    })
+    ```
+    - add new user (named 'test', pass '123', auth_db 'test_db')
     ```
     db.createUser({
         user:'test', 
