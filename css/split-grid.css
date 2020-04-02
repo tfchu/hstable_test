@@ -1,0 +1,39 @@
+html, body, .grid {
+    height: 99.6%;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+/* remove last 10px 1fr and .vertical-gutter3 to remove 3rd row*/
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 10px 1fr 10px 1fr;   /* 5-column grid container, with size specified. 10px for gutter width*/
+    grid-template-rows: 1fr 0px 0fr;                /* 0px for gutter height, not used*/
+}
+  
+.vertical-gutter1 {
+    grid-area: 1 / 2 / 1 / 2;       /* first vertical gutter: row 1 to 1, column 2 to 2*/
+    border: solid 1px black;  
+    /* padding: 0; */
+}
+
+.vertical-gutter3 {
+    grid-area: 1 / 4 / 1 / 4;       /* second vertical gutter: row 1 to 1, column 4 to 4*/
+    border: solid 1px black;  
+    /* padding: 0; */
+}
+  
+.horizontal-gutter {
+    grid-area: 2 / 1 / 2 / 4;
+    border: solid 1px black;
+}
+
+.log {
+    /* float: left; */
+    /* width: 33%; */
+    /* background: red; */
+    /* height: 100%; */
+    color: black;
+    overflow: auto;
+    white-space: nowrap;
+}

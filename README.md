@@ -31,12 +31,14 @@
 - MongoDB controls
     - connection with CLI
         - ```mongo -u test -p 123 <server>/test_db      // server is omitted for localhost```
-    - connection with API
-        - ```mongodb://test:123@<server>:27017/test_db?authSource=test_db&readPreference=primary&appname=MongoDB%20Compass&ssl=false```
+    - connection with API/Mongo-compass
+        - ```mongodb://test:123@localhost:27017/test_db?authSource=test_db&readPreference=primary&appname=MongoDB%20Compass&ssl=false```
+        - ```mongodb://root:123456@localhost:27017/test_db?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&ssl=false```
     - dump
         - ```mongodump -h localhost -d test_db -u test -p 123       // generate dump/test_db```
     - restore
-        - ```mongorestore -h localhost -d test_db -u test -p 123 Automation/	// against dump, from Automation/ dir```
+        - ```mongorestore -h localhost -d test_db -u test -p 123 /dump/test_db/	// against dump, from dump/test_db/ dir```
+		- ```windows mongorestore path: "C:\Program Files\MongoDB\Server\4.2\bin\mongorestore"```
 
 - CRUD operations
     - (C) add
@@ -68,7 +70,7 @@
     db.users.deleteMany({})					# remove all docs
     db.users.deleteMany({ status: "A"})		# remove docs if status = "A"
     ```
-    - aggregation
+    - aggregation with MongoDB CLI
     ```
     db.results.aggregate([
         {
@@ -102,6 +104,22 @@
             } 
         ] 
     }
+    ```
+    - aggregation with MongoDB Laravel-Mongodb
+    ```
+    Result::raw(function($collection)
+    {
+        return $collection->aggregate([
+            [
+                '$lookup' => [
+                    'from' => 'tests', 
+                    'localField' => 'tests_id',
+                    'foreignField' => '_id', 
+                    'as' => 'tests'
+                ]
+            ]
+        ]);
+    });
     ```
     - aggregation return from Laravel-Mongodb
     ```
